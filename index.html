@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://kit.fontawesome.com/f6df8b84c1.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="style.css">
+        <title>Jogo Da Memória</title>
+        <meta name="description" content="Jogo da memória de esportes">
+    </head>
+    <body>
+        <div class="container">
+            <div class="mt-5 text-center">
+                <div class="d-inline h3">
+                    <h1>Jogo Da Memória</h1>
+                </div>
+                <div id="estatisticas">
+                    <ul id="pontuacao" class="d-inline-block">
+                        <li class="estrela d-inline-block"><span class="fa fa-star"></span></li>
+                        <li class="estrela d-inline-block"><span class="fa fa-star"></span></li>
+                        <li class="estrela d-inline-block"><span class="fa fa-star"></span></li>
+                    </ul>
+                    <div class="h3 mt-3 mb-5">
+                        <span id="tentativas">0</span> Tentativas - tempo : <span id="tempoParaTerminar">00:00</span>
+                    </div>
+                    <span id="resetar" class="fa-solid fa-arrows-rotate"></span>
+                </div>
+            </div>
+            <div id="modal" class="modal">
+                <div class="modal-content">
+                    <span id="close" class="close">&times;</span>
+                    <p class="h2">
+                        PARABÉNS,VOCÊ GANHOU!! <span class="fas fa-trophy"></span>
+                    </p>
+                </div>
+            </div>
+            <ul id="boardGame" class="boardGame mb-5"></ul>
+        </div>  
+        <script src="javascript.js"></script>
+    </body>
+</html>
