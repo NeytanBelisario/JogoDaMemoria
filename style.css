@@ -48,19 +48,19 @@ h1{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to right, rgb(35, 189, 81), rgb(54, 223, 96));
+    background: rgb(116, 170, 114);
     margin: 10% auto;
-    border: 0.3em solid white;
+    outline: 2px solid black;
     padding-right: 2em;
     width: 50%;
     height: 30%;
 }
-.close {
+.fechar {
     align-self: flex-end;
     color: black;
     font-size: 3em;
 }
-.close:hover {
+.fechar:hover {
     color: yellow;
     cursor: pointer;
 }
@@ -77,7 +77,7 @@ html {
     flex-direction: column;
     margin-top: 0.5em;
 } 
-.boardGame {
+.caixa {
     background: linear-gradient(160deg, #0d25ad 0%, #7ea0cd 100%);
     display: flex;
     flex-wrap: wrap;
@@ -90,7 +90,7 @@ html {
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
 }
-.card {
+.carta {
     background: rgba(45, 2, 102, 0.986);
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
     border-radius: 0.5em;
@@ -102,24 +102,25 @@ img {
     user-select: none;
     width: 100%;
 }
-.boardGame img {
+.caixa img {
     visibility: hidden;
 }
-.boardGame .card.flip {
+.caixa .carta.virar {
     background: #fff;
     transform: rotateY(360deg);
     transition: transform 0.5s linear;
 }
-.flip img {
+.virar img {
     visibility: visible;
 }
 ul{
     list-style: none;
 }
-#playAgain{
+#jogarDenovo{
     margin-bottom: 1vh;
-    margin-top: 1vh;
-    color: rgba(255, 0, 0, 0.726)(214, 60, 60);
     padding: 5px;
     border-radius: 2px;
+    background-color: rgb(123, 196, 166);
+    margin-top: 2vh;
+    cursor: pointer;
 }

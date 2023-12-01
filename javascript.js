@@ -1,13 +1,13 @@
-const resetButton = document.getElementById("resetar");
-const attemptsToDom = document.getElementById("tentativas");
-const timerToDom = document.getElementById("tempoParaTerminar");
-const boardGame = document.getElementById("boardGame");
+const botaoResetar = document.getElementById("resetar");
+const tentativasParaTerminar = document.getElementById("tentativas");
+const tempoParaTerminar = document.getElementById("tempoParaTerminar");
+const caixa = document.getElementById("caixa");
 const modal = document.getElementById("modal");
-const playAgain = document.getElementById("playAgain");
+const jogarDenovo = document.getElementById("jogarDenovo");
 const star = document.getElementsByClassName("estrela");
 
-/* Array of cards images */
-const playingCards = [
+/* Array das imagens das cartas */
+const jogarcartas = [
     "imgs/basquete.png",
 	"imgs/basquete.png",
     "imgs/beisebol.webp",
@@ -26,41 +26,41 @@ const playingCards = [
 	"imgs/volei.png",
     
 ]
-/* One empty array to store the opened cards and one empty array to store the matched cards */
-let opened = []; let matched = [];
+/* Um array vazio para guardar as cartas abertas e um array vazio para guardar as cartar iguais */
+let aberto = []; let iguais = [];
 
-startGame();
+comecarJogo();
 
-/* If a card is clicked call flipCard() and activate timer if is not activated */
-boardGame.addEventListener("click", function(event) {
-	if (event.target.className === "card") {
-		if (timeStart === false) {
-			timeStart = true; 
-			timer();
+/* Se uma carta é clicada chama o virarcarta() e começa o tempo se não tiver rodando */
+caixa.addEventListener("click", function(event) {
+	if (event.target.className === "carta") {
+		if (comecarTempo === false) {
+			comecarTempo = true; 
+			tempo();
         }
-        flipCard(event);
+        virarcarta(event);
         
 	}
 });
 
-/* When the user click on the reset button, we call reset() */
-resetButton.addEventListener('click', reset);
+/* Quando o usuario clica no botão de restar, chama a função reset() */
+botaoResetar.addEventListener('click', reset);
 
-/* Initialize the game */
-function startGame() {
-    const playingCardsShuffled = shuffle(playingCards); 
-    playingCardsShuffled.forEach(function(card, index) {
+/* Inicia o jogo */
+function comecarJogo() {
+    const jogarcartasShuffled = shuffle(jogarcartas); 
+    jogarcartasShuffled.forEach(function(carta, index) {
         const liTag = document.createElement('li');
-		liTag.classList.add('card');
+		liTag.classList.add('carta');
         const image = document.createElement("img");
-        image.setAttribute("src", playingCardsShuffled[index]);
+        image.setAttribute("src", jogarcartasShuffled[index]);
         image.setAttribute("alt", "");
         liTag.appendChild(image);
-        boardGame.appendChild(liTag);
+        caixa.appendChild(liTag);
     });      
 }
 
-/* Shuffle the array of image cards */ 
+/* Embaralha as imagens do array das cartas */ 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -69,10 +69,10 @@ function shuffle(array) {
     return array;
 } 
 
-/* Displays the elasped time */
-let timeStart = false; let time; let minutes = 0; let seconds = 0;
+/* Mostra o tempo decorrido */
+let comecarTempo = false; let time; let minutes = 0; let seconds = 0;
 
-function timer() {
+function tempo() {
 	time = setInterval(function() {
         seconds++;  
         if (seconds === 60) {
@@ -82,168 +82,163 @@ function timer() {
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
-        timerToDom.textContent = minutes + ":" + seconds ;
+        tempoParaTerminar.textContent = minutes + ":" + seconds ;
     }, 1000);
 }
 
-/* Flip the card and push this to the opened array */
-function flipCard(event) {
-    event.target.classList.add("flip");
-    pushToOpenedArray(event);
+/* virar a carta e adiciona elas para a array aberta */
+function virarcarta(event) {
+    event.target.classList.add("virar");
+    pressioneParaAbrirArray(event);
 }
 
-/* Push the fliped cards to the opened array only when his length is 0 or 1 */
-function pushToOpenedArray(event) {
-    if (opened.length === 0 || opened.length === 1) {
-        //console.log(event.target); console.log(event.target.firstElementChild);
-        opened.push(event.target.firstElementChild);
+/* Adiciona as cartas viradas para a array aberto  apenas quando seu tamanho for 0 ou 1 */
+function pressioneParaAbrirArray(event) {
+    if (aberto.length === 0 || aberto.length === 1) {
+        aberto.push(event.target.firstElementChild);
     }
-    compareCards();
+    comparecartas();
 }
 
-/* Compare two cards to see if they match or not */
-function compareCards() {
-	/* When there are 2 cards in the opened array, we disable mouse click on other cards */
-	if (opened.length === 2) {
+/* Compare as cartas pra ver se elas combinam ou não */
+function comparecartas() {
+	/* Quando tem 2 cartas na array aberto desabilita o click do mouse nas outras cartas */
+	if (aberto.length === 2) {
   		document.body.style.pointerEvents = "none";
     }
-    /* Compare the sources of the two images */
-    if (opened.length === 2 && opened[0].src === opened[1].src) {
+    /* Compara o link das duas imagens */
+    if (aberto.length === 2 && aberto[0].src === aberto[1].src) {
 		match();
     }
-    else if (opened.length === 2 && opened[0].src != opened[1].src) {
+    else if (aberto.length === 2 && aberto[0].src != aberto[1].src) {
 		noMatch();
     }
 }
 
-/* If the two cards are similar, keep them open and push into matched array */ 
+/* Se as duas cartas forem iguais, mantém elas viradas e adiciona elas na array iguais */ 
 function match() {
 	setTimeout(function() {
-		/* Push the matched cards to the matched array */
-        matched.push(...opened);
-        //console.log(matched); console.log(opened);
-		/* Allow the click again */
+		/* adiciona as cartas na array iguais */
+        iguais.push(...aberto);
+		/* Permite o click de novo */
         document.body.style.pointerEvents = "auto";
-        
-		/* Check if the game is over */
-        winGame();
-        
-		/* Clear the opened array */
-        opened = [];
+		/* Confere se o jogo terminou */
+        ganharJogo();
+		/* Limpa a array aberto */
+        aberto = [];
         
     }, 500);
-	attemptsCounter();
-	starRating();
+	tentativascontador();
+	pontuacaoEstrelas();
 }
 
-/* If the two cards don't match, remove the cards from the opened array and the flip class. */
+/* Se as duas cartas não combinarem remove elas da array aberto e da classe virar. */
 function noMatch() {
 	setTimeout(function() {
-        /* Remove class flip on the parent element */
-		opened[0].parentElement.classList.remove("flip");
-        opened[1].parentElement.classList.remove("flip");
-		/* Allow the click again */
+        /* Remove a classe virar do elemento pai */
+		aberto[0].parentElement.classList.remove("virar");
+        aberto[1].parentElement.classList.remove("virar");
+		/* Permite o click de novo */
         document.body.style.pointerEvents = "auto";
-		/* Clear the opened array */
-        opened = [];
+		/* Limpa a array aberto */
+        aberto = [];
     }, 1000);
-	attemptsCounter();
-	starRating();
+	tentativascontador();
+	pontuacaoEstrelas();
 }
 
-/* Increment the attempts counter. */
-let attempts = 0;
+/* Aumenta a contador de tentativas */
+let tentativas = 0;
 
-function attemptsCounter() {
-	attemptsToDom.textContent ++; // Equal to : attemptsToDom.textContent = Number(attemptsToDom.textContent) +1 ;
-	attempts ++;
+function tentativascontador() {
+	tentativasParaTerminar.textContent ++; // Iguala a : tentativasParaTerminar.textContent = Number(tentativasParaTerminar.textContent) +1 ;
+	tentativas ++;
 }
 
-/* Update the star rating. Depending on the number of attempts the user made to finish the game */
-let starCount = 3;
+/* Atualiza o número de estrelas. Dependendo do número de tentativas para terminar o jogo */
+let contaEstrelas = 3;
 
-function starRating() {
-	if (attempts === 10) {
-		/* Delete the third star by removing the icon class and decrease starCount */
+function pontuacaoEstrelas() {
+	if (tentativas === 10) {
+		/* Deleta a terceira estrela por meio de remover a classe do icon e diminuir o contador de estrelas */
 		star[2].firstElementChild.classList.remove("fa-star");
-		starCount--;
+		contaEstrelas--;
     }
-	if (attempts === 15) {
-        /* Delete the second star by removing the icon class and decrease starCount */
+	if (tentativas === 15) {
+        /* Deleta a segunda estrela por meio de remover a classe do icon e diminuir o contador de estrelas */
 		star[1].firstElementChild.classList.remove("fa-star");
-		starCount--;
+		contaEstrelas--;
     }
 }
 
-/* If the 16 cards are in the matched array, we stop the timer and display the modal */
-function winGame() {
-	if (matched.length === 16) {
-		stopTime();
-		updateStats();
+/* Se as 16 cartas são iguais, para o tempo e mostra a mensagem de partida vencida */
+function ganharJogo() {
+	if (iguais.length === 16) {
+		pararTempo();
+		atualizarEstatisticas();
 		displayModal();
     }
 }
 
-/* Stop the timer once the user has matched all 16 cards */
-function stopTime() {
+/* Para o tempo desde que as 16 cartas estejam na array iguais*/
+function pararTempo() {
 	clearInterval(time);
 }
 
-/* Update the modal with the game stats */
-function updateStats() {
-    const statistics = document.querySelector(".modal-content");
-	/* Create 3 paragraphs for the 3 stats and 1 for the playAgain button */
+/* Atualiza a mensagem com as estatisticas do jogo */
+function atualizarEstatisticas() {
+    const estatisticas = document.querySelector(".modal-content");
+	/* Cria 3 paragrafos para as estatisticas e um para o botão jogar de novo */
 	for (let i = 0; i < 4; i++) {
         const stat = document.createElement("p");
-		stat.classList.add("statistics");
-		statistics.appendChild(stat);
+		stat.classList.add("estatisticas");
+		estatisticas.appendChild(stat);
     }
-	/* Select all stats paragraphs to include the text and the playAgain button */ 
-    const paragraphs = Array.from(document.getElementsByClassName('statistics'));
-    paragraphs[0].textContent = "Tempo para concluir : " + minutes + ":" + seconds;
-    paragraphs[1].textContent = "Número de tentativas : " + attempts;
-    paragraphs[2].textContent = "Pontuação : " + starCount + " / 3";
-    paragraphs[3].innerHTML = '<button id="playAgain" class="btn btn-info" onclick="reset()">Jogar de novo </button>';
+	/* Seleciona todos os paragrafos de estatisticas para incluir as mensagens com as estatisticas e o botão jogar de novo */ 
+    const paragrafos = Array.from(document.getElementsByClassName('estatisticas'));
+    paragrafos[0].textContent = "Tempo para concluir : " + minutes + ":" + seconds;
+    paragrafos[1].textContent = "Número de tentativas : " + tentativas;
+    paragrafos[2].textContent = "Pontuação : " + contaEstrelas + " / 3";
+    paragrafos[3].innerHTML = '<button id="jogarDenovo" class="btn btn-info" onclick="reset()">Jogar de novo </button>';
 }
 
-/* Show or hide the modal */
+/* Mostrar ou esconder a mensagem */
 function displayModal() {
     modal.style.display = "block";
-    const modalClose = document.getElementById("close");
-    /* When the user click on the cross or outside the modal, we close the modal */
-	modalClose.addEventListener('click', function() {
+    const modalfechar = document.getElementById("fechar");
+    /* Quando o usuario clica fora da mesagem ou no botao de fechar, fecha a mensagem */
+	modalfechar.addEventListener('click', function() {
 		modal.style.display = "none";
     });
 	window.addEventListener('click', function(event) {
-        //console.log(event.target);
 		if (event.target == modal) {
 			modal.style.display = "none";
         }
 	});
 }
 
-/* Removes all children from boardGame */
-function removeCard() {
-	while (boardGame.hasChildNodes()) {
-		boardGame.removeChild(boardGame.firstChild);
+/* Remove todas as criancas do caixa */
+function removecarta() {
+	while (caixa.hasChildNodes()) {
+		caixa.removeChild(caixa.firstChild);
     }    
 }
 
-/* Reset all for new game */
+/* Reseta tudo para um novo jogo */
 function reset() {
-	stopTime();
-	timeStart = false;
+	pararTempo();
+	comecarTempo = false;
 	seconds = 0;
 	minutes = 0;
-	timerToDom.innerHTML = "00:00";
+	tempoParaTerminar.innerHTML = "00:00";
 	star[1].firstElementChild.classList.add("fa-star");
 	star[2].firstElementChild.classList.add("fa-star");
-	starCount = 3;
-	attempts = 0;
-	attemptsToDom.innerHTML = 0;
-	matched = [];
-	opened = [];
-	removeCard();
-    startGame();
+	contaEstrelas = 3;
+	tentativas = 0;
+	tentativasParaTerminar.innerHTML = 0;
+	iguais = [];
+	aberto = [];
+	removecarta();
+    comecarJogo();
     modal.style.display = "none";
 }
